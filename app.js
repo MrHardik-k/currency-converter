@@ -1,6 +1,7 @@
 from = document.getElementsByName("from");
 
-let url = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies";
+let api_key = "448b0e77ac6b4475a52a6e772892be68"
+let url = `https://api.currencyfreaks.com/v2.0/rates/latest?apikey=${api_key}`;
 
 const dropDown = document.querySelectorAll(".dropDown select");
 const fromCode = document.querySelector(".from select");
@@ -44,7 +45,7 @@ button.addEventListener("click",async (evt)=>{
     evt.preventDefault();
     updateExchangeRate();
 });
-
+let  data;
 const updateExchangeRate = async () => {
     let amount = document.querySelector(".amount input");
     let amval = amount.value;
@@ -52,10 +53,12 @@ const updateExchangeRate = async () => {
         amval = 1;
         amount.value = 1;
     }
-    let finalURL = `${url}/${fromCode.value.toLowerCase()}.json`;
+    let finalURL = `${url}&symbols=${fromCode.value.toUpperCase()},${toCode.value.toUpperCase()}`;
     let responce = await fetch(finalURL);
-    let data = await responce.json();
-    let rate = data[fromCode.value.toLowerCase()][toCode.value.toLowerCase()]
+    data = await responce.json();
+    console.log(finalURL);
+    console.log(data);
+    let rate = data['rates'][toCode.value.toUpperCase()]/data['rates'][fromCode.value.toUpperCase()]
     let changeString = document.querySelector(".msg");
     changeString.innerText = `${amval} ${fromCode.value} = ${amval*rate} ${toCode.value}`;
 };
